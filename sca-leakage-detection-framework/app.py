@@ -1,11 +1,21 @@
 from core import LeakageDetectionFramework
-from math_util import MathUtil
+from leak_calc import MathUtil
+from visualisation import (SeabornPlotter, DefaultPlotter)
 
-class App():
 
-    def start_app(self):
+class App:
+    def __init__(self):
+        self.ldf = LeakageDetectionFramework()
+        self.ldf.load_data(
+            "../traces/REASSURE_power_Unprotected_AES_fixed_vs_random_Exp1.npz"
+        )
+        self.ldf.extract_dataset_components()
+
+    def old_test(self):
         ldf = LeakageDetectionFramework()
-        ldf.load_data('../traces/REASSURE_power_Unprotected_AES_fixed_vs_random_Exp1.npz')
+        ldf.load_data(
+            "../traces/REASSURE_power_Unprotected_AES_fixed_vs_random_Exp1.npz"
+        )
         ldf.extract_dataset_components()
 
         ldf.welch_t_statistic()
@@ -24,8 +34,23 @@ class App():
 
     def test_math(self):
         math_util = MathUtil()
-        print(math_util.mean([[1,2,3],[0,2,5]]))
+        
+        meanF = math_util.mean(self.ldf.traces, indices=tF_index)
+        print(meanF)
+
 
 app = App()
+print(app.ldf.traces.shape)
+app.test_math()
 # app.test_math()
-app.start_app()
+# app.old_test()
+# snsp = SeabornPlotter()
+# print(app.ldf.traces[0, :])
+# math_util = MathUtil()
+# snsp.create_plot_line(math_util.mean(app.ldf.traces))
+
+# defp = DefaultPlotter()
+# defp.create_power_trace_plot(app.ldf)
+# snsp.plot()
+# snsp.create_plot(app.ldf.traces[0, :])
+# snsp.plot()

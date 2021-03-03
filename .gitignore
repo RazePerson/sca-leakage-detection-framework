@@ -130,3 +130,6 @@ dmypy.json
 
 # For the project!
 traces/
+
+# For VS Code!
+.vscode/
