@@ -1,49 +1,68 @@
 import numpy as np
-from visualisation import DefaultPlotter, SeabornPlotter
+import pandas as pd
+from IPython.display import display 
+from visualisation import SeabornPlotter
 from leak_calc import TVLA
+from data import TraceData
 
 
 class LeakageDetectionFramework:
-    def __init__(self):
-        self.default_plotter = DefaultPlotter()
+    # def __init__(self):
+    #     self.default_plotter = DefaultPlotter()
 
     def load_data(self, data_file):
-        self.data = np.load(data_file)
+        data = np.load(data_file)
+        trace_data = TraceData.get_instance()
+        trace_data.initialise(data)
 
-    def extract_dataset_components(self):
-        self.traces = (self.data["traces"]).astype(float)
-        self.flag = self.data["flag"]
-        self.nr_of_traces, self.nr_of_samples = self.traces.shape
-
-    def get_fixed_traces(self):
-        tF_index = self.flag == 1
-        return self.traces[tF_index[:, 0], :]
-
-    def get_random_traces(self):
-        tR_index = self.flag == 1
-        return self.traces[tR_index[:, 0], :]
-
-    def calculate_leakage(self, range, threshold, test_type=None):
+    def calculate_t_statistic(self, test_type=None):
+        trace_data = TraceData.get_instance()
         if test_type is not None:
             return 0
         else:
             tvla = TVLA()
-            tvla.welch_t_statistic()
-            self.threshold = threshold
-            try:
-                return np.abs(self.t_statistic[range]) > self.threshold
-            except AttributeError:
-                print("t_statistic is not set!")
+            return tvla.welch_t_statistic(
+                trace_data.get_fixed_traces(), trace_data.get_random_traces()
+            )
 
-    def create_default_plots(self):
-        self.default_plotter.create_power_trace_plot(self)
-        self.default_plotter.create_t_statistic_plot(self)
+    def calculate_leakage(self, t_statistic, range, threshold):
+        try:
+            return np.abs(t_statistic[range]) > threshold
+        except AttributeError:
+            print("t_statistic is not set!")
 
-    def plot(self):
-        self.default_plotter.plot()
+    def convert_t_statistic_to_data_frame(self, data):
+        return pd.DataFrame({'T-Statistic': data, 'Time Samples': range(0, len(data))})
+
+    def plotter(self):
+        return self.Plotter()
 
     def __str__(self):
         return "Number of traces: %.0f\nNumber of samples: %.0f " % (
             self.nr_of_traces,
             self.nr_of_samples,
         )
+
+    class Plotter():
+        def __init__(self):
+            self.visualisation = SeabornPlotter()
+
+        def create_plot(self, data):
+            self.visualisation.create_plot_line(data)
+            return self
+
+        def show_threshold(self, threshold, color=None):
+            self.visualisation.draw_horizontal_line(threshold)
+            self.visualisation.draw_horizontal_line(-threshold)
+            return self
+
+        def mark_points(self, points):
+            self.visualisation.mark_points(points)
+            return self
+
+        def subplot(self, row, col):
+            self.visualisation.subplot(row, col)
+            return self
+
+        def plot(self):
+            self.visualisation.plot()

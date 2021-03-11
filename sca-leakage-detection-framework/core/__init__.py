@@ -1,1 +1,1 @@
-from core.leakage_detection import LeakageDetectionFramework
+from core.leakage_detection import LeakageDetectionFramework  # NOQA

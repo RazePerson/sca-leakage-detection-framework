@@ -1,1 +1,1 @@
-from data.data_holder import DataHolder
+from data.data_holder import TraceData  # NOQA

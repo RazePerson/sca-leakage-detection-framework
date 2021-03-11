@@ -1,1 +1,1 @@
-from visualisation.visualisation import (DefaultPlotter, SeabornPlotter)
+from visualisation.visualisation import DefaultPlotter, SeabornPlotter  # NOQA

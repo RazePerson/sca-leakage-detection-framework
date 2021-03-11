@@ -1,21 +1,29 @@
 from leak_calc import MathUtil
+import numpy as np
 
-class TVLA():
+
+class TVLA:
     def __init__(self):
         self.stuff = 0
 
-    def welch_t_statistic(self, data):
-        tF_index = self.flag == 1
-        tR_index = self.flag == 0
+    def welch_t_statistic(self, trace_set1, trace_set2):
 
-        NF = tF_index.sum()
-        NR = tR_index.sum()
+        trace_set1_length = len(trace_set1)
+        trace_set2_length = len(trace_set2)
 
         math_util = MathUtil()
 
-        meanF = math_util.mean(self.traces, indices=tF_index)
-        meanR = math_util.mean(self.traces, indices=tR_index)
-        varF = math_util.variance(self.traces, indices=tF_index)
-        varR = math_util.variance(self.traces, indices=tR_index)
+        trace_set1_mean = math_util.mean(trace_set1)
+        trace_set2_mean = math_util.mean(trace_set2)
+        trace_set_1_var = math_util.variance(trace_set1)
+        trace_set_2_var = math_util.variance(trace_set2)
 
-        return (meanF - meanR) / np.sqrt(varF / NF + varR / NR)
+        mean_diff = trace_set1_mean - trace_set2_mean
+
+        var_per_length_1 = trace_set_1_var / trace_set1_length
+        var_per_length_2 = trace_set_2_var / trace_set2_length
+
+        return (mean_diff) / np.sqrt(var_per_length_1 + var_per_length_2)
+
+    def correlation_test(self):
+        pass
