@@ -1,5 +1,6 @@
 from core import LeakageDetectionFramework
 from leak_calc import MathUtil
+from data import TraceData
 
 
 class App:
@@ -19,31 +20,34 @@ class App:
         ldf.welch_t_statistic()
         stat_range = range(0, 13900)
         threshold = 4.5
-        ldf.calculate_leakage(stat_range, threshold)
+        ldf.indices_of_leaky_samples(stat_range, threshold)
         ldf.create_default_plots()
 
         stat_range = range(0, 1000)
         threshold = 4.5
-        ldf.calculate_leakage(stat_range, threshold)
+        ldf.indices_of_leaky_samples(stat_range, threshold)
         ldf.create_default_plots()
 
         ldf.plot()
         # print(ldf.t_statistic)
 
     def test_leakage(self):
+        trace_data = TraceData.get_instance()
         stat_range = range(0, 13900)
         threshold = 4.5
         t_statistic = self.ldf.calculate_t_statistic()
-        leakage = self.ldf.calculate_leakage(t_statistic, stat_range, threshold)
+        leakage = self.ldf.indices_of_leaky_samples(t_statistic, stat_range, threshold)
 
         print(leakage.sum())
         print(t_statistic)
         plotter = self.ldf.plotter()
-        t_stat_data_frame = self.ldf.convert_t_statistic_to_data_frame(t_statistic)
+        print(t_statistic.shape)
+        t_stat_data_frame = trace_data.convert_t_statistic_to_data_frame(t_statistic)
+        traces = trace_data.convert_to_data_frame(trace_data.get_all_traces())
         coord = ((12, 40), (30, 59), (2500, 23), (5760, 81), (6000, 10))
-        plotter.subplot(1, 2).create_plot(t_stat_data_frame).show_threshold(threshold).mark_points(
+        plotter.create_line_plot(t_stat_data_frame).show_threshold(threshold).mark_points(
             coord
-        ).create_plot(t_stat_data_frame).plot()
+        ).create_line_plot(t_stat_data_frame).create_line_plot(traces).plot()
 
     def test_math(self):
         math_util = MathUtil()

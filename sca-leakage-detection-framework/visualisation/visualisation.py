@@ -46,6 +46,7 @@ class SeabornPlotter:
         self.active_plots = []
         self.is_subplot = False
         self.ax_count = 0
+        self.figsize = (7, 6)
         sns.set_theme(style="darkgrid")
 
     def hist_plot_traces(self, data):
@@ -54,22 +55,55 @@ class SeabornPlotter:
     def create_plot(self, data):
         sns.displot(data=data)
 
-    def create_plot_line(self, data):
-        y, x = data.columns.values
+    # def create_line_plot(self, data):
+    #     g = sns.FacetGrid(data, size=5, aspect=2.5)
+    #     g.map(sns.relplot)
+
+    #     self.active_plots.append(g)
+
+    def create_line_plot(self, data, figsize=None):
+        figsize = figsize if figsize else self.figsize
+        x, y = data.columns.values
         if self.is_subplot is True:
-            self.active_plots.append(
-                sns.regplot(ax=self.axes[self.ax_count], x=x, y=y, data=data)
-            )
+            # self.active_plots.append(sns.relplot(x=x, y=y, data=data, kind="line"))
+            # fig = plt.gcf()
+            # fig.set_size_inches(7, 6)
+            self.__handle_plot(sns.relplot(x=x, y=y, data=data, kind="line"), figsize)
             self.ax_count += 1
         else:
-            self.active_plots.append(sns.relplot(x=x, y=y, data=data, kind="line"))
+            self.__handle_plot(sns.relplot(x=x, y=y, data=data, kind="line"), figsize)
+            # self.active_plots.append(sns.relplot(x=x, y=y, data=data, kind="line"))
+            # fig = plt.gcf()
+            # fig.set_size_inches(7, 6)
+
+    def __handle_plot(self, plot_func, figsize):
+        self.active_plots.append(plot_func)
+        fig = plt.gcf()
+        fig.set_size_inches(figsize)
+
+    def create_hist_plot(self, data):
+        x, y = data.columns.values
+        if self.is_subplot is True:
+            self.active_plots.append(sns.histplot(x=x, y=y, data=data))
+            self.ax_count += 1
+        else:
+            self.active_plots.append(sns.histplot(x=x, y=y, data=data))
+
+    # def draw_horizontal_line(self, y_coord, color=None, ls=None):
+    #     color = color if color else "red"
+    #     ls = ls if ls else "--"
+    #     last_plot = len(self.active_plots) - 1
+    #     print(self.active_plots[last_plot])
+    #     print(self.active_plots[last_plot].axes[0])
+
+    #     self.active_plots[last_plot].axes[0][0].axhline(y_coord, color=color, ls=ls)
 
     def draw_horizontal_line(self, y_coord, color=None, ls=None):
         color = color if color else "red"
         ls = ls if ls else "--"
 
         last_plot = len(self.active_plots) - 1
-        print(self.active_plots[last_plot].axes[0])
+
         axis = self.active_plots[last_plot].axes[0][0]
         axis.axhline(y_coord, color=color, ls=ls)
 
@@ -86,4 +120,7 @@ class SeabornPlotter:
         self.is_subplot = True
 
     def plot(self):
+
+        # figsize = (30, 14)
+        # plt.figure(figsize=figsize)
         plt.show()

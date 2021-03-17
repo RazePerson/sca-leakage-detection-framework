@@ -1,3 +1,6 @@
+import pandas as pd
+
+
 class TraceData:
     __instance = None
 
@@ -33,3 +36,11 @@ class TraceData:
     def get_random_traces(self):
         random_trace_index = self.flag == 0
         return self.traces[random_trace_index[:, 0], :]
+
+    def convert_t_statistic_to_data_frame(self, data):
+        return self.convert_to_data_frame(data=data, x='Time Samples', y='T-Statistic')
+
+    def convert_to_data_frame(self, data, x=None, y=None):
+        x = x if x else 'Length'
+        y = y if y else 'Data'
+        return pd.DataFrame({x: range(0, len(data)), y: data})
