@@ -1,27 +1,18 @@
 from visualisation import SeabornPlotter
-from data import TraceData
-import pandas as pd
+from decorators import translate_plot_data
 
 
-class Plotter():
+class Plotter:
     def __init__(self):
         self.visualisation = SeabornPlotter()
 
-    def translate_plot_data(func):
-        def wrapper(self, data):
-            if not isinstance(data, pd.DataFrame):
-                data = TraceData.get_instance().convert_to_data_frame(data)
-            func(self, data)
-            return self
-        return wrapper
-
     @translate_plot_data
-    def create_line_plot(self, data):
+    def create_line_plot(self, data, x=None, y=None):
         self.visualisation.create_line_plot(data)
         return self
 
     @translate_plot_data
-    def create_hist_plot(self, data):
+    def create_hist_plot(self, data, x=None, y=None):
         self.visualisation.create_hist_plot(data)
         return self
 

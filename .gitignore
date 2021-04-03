@@ -133,3 +133,6 @@ traces/
 
 # For VS Code!
 .vscode/
+
+# For the exported HTML
+*.html
