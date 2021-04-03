@@ -42,12 +42,20 @@ class DefaultPlotter:
 
 
 class SeabornPlotter:
-    def __init__(self):
+    def __init__(self, style=None):
         self.active_plots = []
         self.is_subplot = False
         self.ax_count = 0
         self.figsize = (7, 6)
-        sns.set_theme(style="darkgrid")
+        self.color = None
+        style = style if style else "darkgrid"
+        sns.set_theme(style=style)
+
+    def change_color(self, color):
+        self.color = color
+
+    def default_color(self):
+        self.color = None
 
     def hist_plot_traces(self, data):
         sns.histplot(data=data)
@@ -68,10 +76,14 @@ class SeabornPlotter:
             # self.active_plots.append(sns.relplot(x=x, y=y, data=data, kind="line"))
             # fig = plt.gcf()
             # fig.set_size_inches(7, 6)
-            self.__handle_plot(sns.relplot(x=x, y=y, data=data, kind="line"), figsize)
+            self.__handle_plot(
+                sns.relplot(x=x, y=y, data=data, kind="line", color=self.color), figsize
+            )
             self.ax_count += 1
         else:
-            self.__handle_plot(sns.relplot(x=x, y=y, data=data, kind="line"), figsize)
+            self.__handle_plot(
+                sns.relplot(x=x, y=y, data=data, kind="line", color=self.color), figsize
+            )
             # self.active_plots.append(sns.relplot(x=x, y=y, data=data, kind="line"))
             # fig = plt.gcf()
             # fig.set_size_inches(7, 6)
@@ -84,10 +96,14 @@ class SeabornPlotter:
     def create_hist_plot(self, data):
         x, y = data.columns.values
         if self.is_subplot is True:
-            self.active_plots.append(sns.histplot(x=x, y=y, data=data))
+            self.active_plots.append(
+                sns.histplot(x=x, y=y, data=data, color=self.color)
+            )
             self.ax_count += 1
         else:
-            self.active_plots.append(sns.histplot(x=x, y=y, data=data))
+            self.active_plots.append(
+                sns.histplot(x=x, y=y, data=data, color=self.color)
+            )
 
     # def draw_horizontal_line(self, y_coord, color=None, ls=None):
     #     color = color if color else "red"
@@ -107,7 +123,7 @@ class SeabornPlotter:
         axis = self.active_plots[last_plot].axes[0][0]
         axis.axhline(y_coord, color=color, ls=ls)
 
-    def mark_points(self, points, marker=None, color=None):
+    def highlight_points(self, points, marker=None, color=None):
         marker = marker if marker else "*"
         color = color if color else "red"
         for x, y in points:

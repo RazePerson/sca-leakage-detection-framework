@@ -45,7 +45,7 @@ class App:
         t_stat_data_frame = trace_data.convert_t_statistic_to_data_frame(t_statistic)
         traces = trace_data.convert_to_data_frame(trace_data.get_all_traces())
         coord = ((12, 40), (30, 59), (2500, 23), (5760, 81), (6000, 10))
-        plotter.create_line_plot(t_stat_data_frame).show_threshold(threshold).mark_points(
+        plotter.create_line_plot(t_stat_data_frame).show_threshold(threshold).highlight_points(
             coord
         ).create_line_plot(t_stat_data_frame).create_line_plot(traces).plot()
 

@@ -46,5 +46,5 @@ class LeakageDetectionFramework:
     def __calculate_leakage(self, t_statistic, t_stat_range, threshold):
         return np.abs(t_statistic[t_stat_range]) > threshold
 
-    def plotter(self):
-        return Plotter()
+    def plotter(self, style=None):
+        return Plotter(style)

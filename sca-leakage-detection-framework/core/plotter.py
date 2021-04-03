@@ -3,8 +3,14 @@ from decorators import translate_plot_data
 
 
 class Plotter:
-    def __init__(self):
-        self.visualisation = SeabornPlotter()
+    def __init__(self, style=None):
+        self.visualisation = SeabornPlotter(style)
+
+    def change_color(self, color):
+        self.visualisation.change_color(color)
+
+    def default_color(self):
+        self.visualisation.default_color()
 
     @translate_plot_data
     def create_line_plot(self, data, x=None, y=None):
@@ -21,8 +27,8 @@ class Plotter:
         self.visualisation.draw_horizontal_line(-threshold)
         return self
 
-    def mark_points(self, points):
-        self.visualisation.mark_points(points)
+    def highlight_points(self, points, marker=None, color=None):
+        self.visualisation.highlight_points(points, marker=marker, color=color)
         return self
 
     def subplot(self, row, col):
