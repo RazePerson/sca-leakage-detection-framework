@@ -12,3 +12,13 @@ def translate_plot_data(func):
         return self
 
     return wrapper
+
+
+def translate_plot_data_dist(func):
+    def wrapper(self, data, label=None):
+        if not isinstance(data, pd.Series):
+            data = TraceData.get_instance().convert_to_series(data, label=label)
+        func(self, data)
+        return self
+
+    return wrapper

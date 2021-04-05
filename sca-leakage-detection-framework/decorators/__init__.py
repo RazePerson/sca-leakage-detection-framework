@@ -1,1 +1,1 @@
-from decorators.dec import translate_plot_data
+from decorators.dec import translate_plot_data, translate_plot_data_dist

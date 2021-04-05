@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
+import numpy as np
 from leak_calc import MathUtil
 
 sns.set()
@@ -94,16 +95,13 @@ class SeabornPlotter:
         fig.set_size_inches(figsize)
 
     def create_hist_plot(self, data):
-        x, y = data.columns.values
+        # x, y = data.columns.values
+        bins = np.arange(data.min(), data.max() + 1)
         if self.is_subplot is True:
-            self.active_plots.append(
-                sns.histplot(x=x, y=y, data=data, color=self.color)
-            )
+            self.active_plots.append(sns.displot(data, bins=bins, kde=False))
             self.ax_count += 1
         else:
-            self.active_plots.append(
-                sns.histplot(x=x, y=y, data=data, color=self.color)
-            )
+            self.active_plots.append(sns.displot(data, bins=bins, kde=False))
 
     # def draw_horizontal_line(self, y_coord, color=None, ls=None):
     #     color = color if color else "red"
@@ -115,13 +113,22 @@ class SeabornPlotter:
     #     self.active_plots[last_plot].axes[0][0].axhline(y_coord, color=color, ls=ls)
 
     def draw_horizontal_line(self, y_coord, color=None, ls=None):
-        color = color if color else "red"
+        color = color if color else "black"
         ls = ls if ls else "--"
 
         last_plot = len(self.active_plots) - 1
 
         axis = self.active_plots[last_plot].axes[0][0]
         axis.axhline(y_coord, color=color, ls=ls)
+
+    def draw_vertical_line(self, x_coord, color=None, ls=None):
+        color = color if color else "black"
+        ls = ls if ls else "--"
+
+        last_plot = len(self.active_plots) - 1
+
+        axis = self.active_plots[last_plot].axes[0][0]
+        axis.axvline(x_coord, color=color, ls=ls)
 
     def highlight_points(self, points, marker=None, color=None):
         marker = marker if marker else "*"

@@ -1,5 +1,5 @@
 from visualisation import SeabornPlotter
-from decorators import translate_plot_data
+from decorators import translate_plot_data, translate_plot_data_dist
 
 
 class Plotter:
@@ -17,14 +17,22 @@ class Plotter:
         self.visualisation.create_line_plot(data)
         return self
 
-    @translate_plot_data
+    @translate_plot_data_dist
     def create_hist_plot(self, data, x=None, y=None):
         self.visualisation.create_hist_plot(data)
         return self
 
-    def show_threshold(self, threshold, color=None):
-        self.visualisation.draw_horizontal_line(threshold)
-        self.visualisation.draw_horizontal_line(-threshold)
+    def show_threshold(self, threshold, color=None, ls=None):
+        self.visualisation.draw_horizontal_line(threshold, color=color, ls=ls)
+        self.visualisation.draw_horizontal_line(-threshold, color=color, ls=ls)
+        return self
+
+    def draw_horizontal_line(self, line, color=None, ls=None):
+        self.visualisation.draw_horizontal_line(line, color=color, ls=ls)
+        return self
+
+    def draw_vertical_line(self, line, color=None, ls=None):
+        self.visualisation.draw_vertical_line(line, color=color, ls=ls)
         return self
 
     def highlight_points(self, points, marker=None, color=None):
