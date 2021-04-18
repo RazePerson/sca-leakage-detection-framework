@@ -1,1 +1,1 @@
-from data.data_handler import TraceData  # NOQA
+from data.data_handler import TVLAData, CorrelationTestData  # NOQA

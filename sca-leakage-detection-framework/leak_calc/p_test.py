@@ -1,5 +1,5 @@
 import numpy as np
-from data import TraceData
+from data import TVLAData
 
 
 class PTest:
@@ -13,27 +13,23 @@ class PTest:
         self.test_set = [None] * (2 * self.folds)
         self.profile_set = [None] * (2 * self.folds)
 
-    def initialise_sets(self, trace_data):
-        self.init_to_zero(trace_data)
+    def initialise_sets(self, t_test_data):
+        self.init_to_zero(t_test_data)
 
     def init_to_zero(self):
-        trace_data = TraceData.get_instance()
-        self.step = int(np.floor(trace_data.nr_of_traces / self.folds))
+        t_test_data = TVLAData.get_instance()
+        self.step = int(np.floor(t_test_data.nr_of_traces / self.folds))
         for i in range(0, 2 * self.folds, 1):
             if np.mod(i, 2) == 0:
                 # self.profile_set[i] and self.test_set[i] with even index i will contain traces:
-                self.profile_set[i] = np.zeros(
-                    ((self.folds - 1) * self.step, trace_data.nr_of_samples)
-                )
-                self.test_set[i] = np.zeros((self.step, trace_data.nr_of_samples))
+                self.profile_set[i] = np.zeros(((self.folds - 1) * self.step, t_test_data.nr_of_samples))
+                self.test_set[i] = np.zeros((self.step, t_test_data.nr_of_samples))
             else:
                 # self.profile_set[i] and self.test_set[i] with odd index i will contain traces:
-                self.profile_set[i] = np.zeros(
-                    ((self.folds - 1) * self.step, 16), dtype=np.int
-                )
+                self.profile_set[i] = np.zeros(((self.folds - 1) * self.step, 16), dtype=np.int)
                 self.test_set[i] = np.zeros((self.step, 16), dtype=np.int)
 
-    def init_sets_with_values(self, trace_data):
+    def init_sets_with_values(self, t_test_data):
         t = 0
         for i in range(0, self.folds, 1):
             q_in_profile_set = 0
@@ -41,26 +37,18 @@ class PTest:
                 if i != j:
                     # Profile sets:
                     self.profile_set[t][
-                        q_in_profile_set
-                        * self.step : (q_in_profile_set + 1)
-                        * self.step,
+                        q_in_profile_set * self.step : (q_in_profile_set + 1) * self.step,
                         :,
-                    ] = trace_data.traces[j * self.step : (j + 1) * self.step, :]
+                    ] = t_test_data.traces[j * self.step : (j + 1) * self.step, :]
                     self.profile_set[t + 1][
-                        q_in_profile_set
-                        * self.step : (q_in_profile_set + 1)
-                        * self.step,
+                        q_in_profile_set * self.step : (q_in_profile_set + 1) * self.step,
                         :,
-                    ] = trace_data.plain_text[j * self.step : (j + 1) * self.step, :]
+                    ] = t_test_data.plain_text[j * self.step : (j + 1) * self.step, :]
                     q_in_profile_set = q_in_profile_set + 1
                 else:
                     # Test sets:
-                    self.test_set[t] = trace_data.traces[
-                        j * self.step : (j + 1) * self.step, :
-                    ]
-                    self.test_set[t + 1] = trace_data.plain_text[
-                        j * self.step : (j + 1) * self.step, :
-                    ]
+                    self.test_set[t] = t_test_data.traces[j * self.step : (j + 1) * self.step, :]
+                    self.test_set[t + 1] = t_test_data.plain_text[j * self.step : (j + 1) * self.step, :]
             t = t + 2
 
     def value_step(self, matrix, first, second):
@@ -83,9 +71,7 @@ class PTest:
 
             # Compute the mean of j-th profile set:
             for i in range(0, 256, 1):
-                to_be_put_in_mu[i, :] = np.mean(
-                    Lj[Pj[:, Byte_to_focus] == i, :], axis=0
-                )
+                to_be_put_in_mu[i, :] = np.mean(Lj[Pj[:, Byte_to_focus] == i, :], axis=0)
 
             mu[j] = to_be_put_in_mu
 

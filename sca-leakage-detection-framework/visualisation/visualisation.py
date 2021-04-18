@@ -19,10 +19,7 @@ class DefaultPlotter:
         plt.xlim(0, ldf.nr_of_samples - 1)
         plt.xlabel("Time Samples")
         plt.ylabel("t-statistic")
-        plt.title(
-            "Figure %.0f: Fixed vs Random Exp.1 (%.0f traces)"
-            % (self.fignum, ldf.nr_of_traces)
-        )
+        plt.title("Figure %.0f: Fixed vs Random Exp.1 (%.0f traces)" % (self.fignum, ldf.nr_of_traces))
         self.fignum += 1
 
     def create_power_trace_plot(self, ldf):
@@ -77,14 +74,10 @@ class SeabornPlotter:
             # self.active_plots.append(sns.relplot(x=x, y=y, data=data, kind="line"))
             # fig = plt.gcf()
             # fig.set_size_inches(7, 6)
-            self.__handle_plot(
-                sns.relplot(x=x, y=y, data=data, kind="line", color=self.color), figsize
-            )
+            self.__handle_plot(sns.relplot(x=x, y=y, data=data, kind="line", color=self.color), figsize)
             self.ax_count += 1
         else:
-            self.__handle_plot(
-                sns.relplot(x=x, y=y, data=data, kind="line", color=self.color), figsize
-            )
+            self.__handle_plot(sns.relplot(x=x, y=y, data=data, kind="line", color=self.color), figsize)
             # self.active_plots.append(sns.relplot(x=x, y=y, data=data, kind="line"))
             # fig = plt.gcf()
             # fig.set_size_inches(7, 6)
@@ -137,9 +130,7 @@ class SeabornPlotter:
             plt.plot(x, y, marker=marker, color=color)
 
     def subplot(self, row, col):
-        self.fig, self.axes = plt.subplots(
-            row, col, figsize=(10 * row, 3 * col), sharex=True
-        )
+        self.fig, self.axes = plt.subplots(row, col, figsize=(10 * row, 3 * col), sharex=True)
         self.is_subplot = True
 
     def plot(self):

@@ -92,15 +92,15 @@ print(ldf.calculate_leaky_points(t_statistic, range_of_measurement, threshold))
 
 <br><br>
 ### Trace Data Class
-The framework uses a few helper classes to keep everything more organized, maintainable and more easy to scale. One of these classes is called *TraceData*. This is used to store the data that the framework loads from the *npz* file. We can use the functions of this helper class to fetch different parts of the information that we wish to work with, visualise, extend, etc.
+The framework uses a few helper classes to keep everything more organized, maintainable and more easy to scale. One of these classes is called *TVLAData*. This is used to store the data that the framework loads from the *npz* file. We can use the functions of this helper class to fetch different parts of the information that we wish to work with, visualise, extend, etc.
 <br>
-The *TraceData* class is designed to be a [singleton](https://www.tutorialspoint.com/python_design_patterns/python_design_patterns_singleton.htm). The reason behind this decision is that we do not wish to create new instances every time we load data sets for our tests. This helps in keeping the data from different tests separated from each other, reducing the chances of mixing them up with one another.
+The *TVLAData* class is designed to be a [singleton](https://www.tutorialspoint.com/python_design_patterns/python_design_patterns_singleton.htm). The reason behind this decision is that we do not wish to create new instances every time we load data sets for our tests. This helps in keeping the data from different tests separated from each other, reducing the chances of mixing them up with one another.
 <br>
 Using the class is simple, but first we need to import it from the proper package:
 
 
 ```python
-from data import TraceData
+from data import TVLAData
 ```
 
 <br>
@@ -109,7 +109,7 @@ After importing the class we can fetch the instance and use it.
 
 
 ```python
-trace_data = TraceData.get_instance()
+t_test_data = TVLAData.get_instance()
 ```
 
 <b>Important note:</b> before using it we need to remember that in [this section](#The-Main-Framework-Class) we loaded the data from the *npz* file using the framework. This step is a must before fetching data from the class's instance.
@@ -121,7 +121,7 @@ To get all the trace data from the file:
 
 
 ```python
-print('Every trace: \n%s' % trace_data.get_all_traces())
+print('Every trace: \n%s' % t_test_data.get_all_traces())
 ```
 
     Every trace: 
@@ -133,7 +133,7 @@ To get all the fixed traces from the file (this is based on the fixed flag that 
 
 
 ```python
-print('Fixed traces: \n%s' % trace_data.get_fixed_traces())
+print('Fixed traces: \n%s' % t_test_data.get_fixed_traces())
 ```
 
     Fixed traces: 
@@ -151,7 +151,7 @@ To get all the random traces from the file (this is based on the fixed flag that
 
 
 ```python
-print('Random traces: \n%s' % trace_data.get_random_traces())
+print('Random traces: \n%s' % t_test_data.get_random_traces())
 ```
 
     Random traces: 
@@ -168,11 +168,11 @@ print('Random traces: \n%s' % trace_data.get_random_traces())
 Currently, we have mostly seen the format that we imported from the *npz* file and used almost everything as arrays. It is sometimes useful to have the data in other formats too. For example, when we are using the plotting functionality of the framework, we need to use [*DataFrame*](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html) class to visualize the data. This is part of the *pandas* library and it uses a tabular data format.
 
 <br>
-When we use the *DataFrame* class we can name the headers of the columns that will represent the data in the rows of our structure. For this we can use the following utility function of the *TraceData* class:
+When we use the *DataFrame* class we can name the headers of the columns that will represent the data in the rows of our structure. For this we can use the following utility function of the *TVLAData* class:
 
 
 ```python
-trace_data.convert_t_statistic_to_data_frame(t_statistic)
+t_test_data.convert_t_statistic_to_data_frame(t_statistic)
 ```
 
 
@@ -269,8 +269,8 @@ When we call the function above, under the hood we are actually using another fu
 
 
 ```python
-time_samples = range(0, len(trace_data.get_random_traces()[0]))
-trace_data.convert_to_data_frame(data_x=time_samples, data_y=trace_data.get_random_traces()[0], x="t Samples", y="Random Traces")
+time_samples = range(0, len(t_test_data.get_random_traces()[0]))
+t_test_data.convert_to_data_frame(data_x=time_samples, data_y=t_test_data.get_random_traces()[0], x="t Samples", y="Random Traces")
 ```
 
 
@@ -390,7 +390,7 @@ The idea was to declare a **chain** of plots that the user would like to display
 
 <br>
 ##### Example
-Let's say that the user would like to compare two sets of data. In our case it would make sens to look at the initial power trace that we extract from the data file and the T-Statistic after our calculations. We already calculated everything above, so as we discussed in [this section](#Trace-Data-Class), we can just conveniently re-use the *TraceData* class' instance and use the data for plotting.
+Let's say that the user would like to compare two sets of data. In our case it would make sens to look at the initial power trace that we extract from the data file and the T-Statistic after our calculations. We already calculated everything above, so as we discussed in [this section](#Trace-Data-Class), we can just conveniently re-use the *TVLAData* class' instance and use the data for plotting.
 
 
 ```python
@@ -411,7 +411,7 @@ We say chain because, let's say we would like to plot the T-Statistic and the or
 
 
 ```python
-plotter.create_line_plot(t_statistic).create_line_plot(trace_data.get_all_traces()).plot()
+plotter.create_line_plot(t_statistic).create_line_plot(t_test_data.get_all_traces()).plot()
 ```
 
 
@@ -430,7 +430,7 @@ As we can see it is really simple to create two consecutive plots with different
 
 
 ```python
-plotter.create_line_plot(t_statistic, x="Time Samples", y="T-Stat").create_line_plot(trace_data.get_all_traces(), x="Time Samples", y="Traces").plot()
+plotter.create_line_plot(t_statistic, x="Time Samples", y="T-Stat").create_line_plot(t_test_data.get_all_traces(), x="Time Samples", y="Traces").plot()
 ```
 
 

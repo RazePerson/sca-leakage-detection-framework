@@ -1,6 +1,6 @@
 from core import LeakageDetectionFramework
 from leak_calc import MathUtil
-from data import TraceData
+from data import TVLAData
 
 
 class App:
@@ -32,7 +32,7 @@ class App:
         # print(ldf.t_statistic)
 
     def test_leakage(self):
-        trace_data = TraceData.get_instance()
+        t_test_data = TVLAData.get_instance()
         stat_range = range(0, 13900)
         threshold = 4.5
         t_statistic = self.ldf.calculate_t_statistic()
@@ -42,8 +42,8 @@ class App:
         print(t_statistic)
         plotter = self.ldf.plotter()
         print(t_statistic.shape)
-        t_stat_data_frame = trace_data.convert_t_statistic_to_data_frame(t_statistic)
-        traces = trace_data.convert_to_data_frame(trace_data.get_all_traces())
+        t_stat_data_frame = t_test_data.convert_t_statistic_to_data_frame(t_statistic)
+        traces = t_test_data.convert_to_data_frame(t_test_data.get_all_traces())
         coord = ((12, 40), (30, 59), (2500, 23), (5760, 81), (6000, 10))
         plotter.create_line_plot(t_stat_data_frame).show_threshold(threshold).highlight_points(
             coord
@@ -51,7 +51,7 @@ class App:
 
     def test_math(self):
         math_util = MathUtil()
-        mean = math_util.mean(self.ldf.trace_data.get_fixed_traces())
+        mean = math_util.mean(self.ldf.t_test_data.get_fixed_traces())
         print(mean)
 
 
