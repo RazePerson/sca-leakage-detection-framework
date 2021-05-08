@@ -34,15 +34,24 @@ class TVLAData(TraceData):
         self.nr_of_traces, self.nr_of_samples = self.traces.shape
 
     def get_all_traces(self):
-        return self.traces[0, :]
+        return self.traces
 
-    def get_fixed_traces(self):
+    def get_trace_sample(self, sample):
+        return self.traces[:, sample]
+
+    def get_every_fixed_trace(self):
         fixed_trace_index = self.flag == 1
         return self.traces[fixed_trace_index[:, 0], :]
 
-    def get_random_traces(self):
+    def get_fixed_trace_sample(self, sample):
+        return self.get_every_fixed_trace()[:, sample]
+
+    def get_every_random_trace(self):
         random_trace_index = self.flag == 0
         return self.traces[random_trace_index[:, 0], :]
+
+    def get_random_trace_sample(self, sample):
+        return self.get_every_random_trace()[:, sample]
 
     def convert_t_statistic_to_data_frame(self, data):
         return self.convert_to_data_frame(data_y=data, x="Time Samples", y="T-Statistic")
@@ -76,4 +85,19 @@ class CorrelationTestData(TraceData):
             CorrelationTestData.__instance = self
 
     def load_data(self, data_file):
-        pass
+        data = np.load(data_file)
+        self.traces = (data["traces"]).astype(float)
+        self.nr_of_traces, self.nr_of_samples = self.traces.shape
+        self.plain_text = data["pt"]
+
+    # def get_traces(self):
+    #     return self.traces
+
+    # def get_plain_text(self):
+    #     return self.plain_text
+
+    # def get_nr_of_traces(self):
+    #     return self.nr_of_traces
+
+    # def get_nr_of_samples(self):
+    #     return self.nr_of_samples

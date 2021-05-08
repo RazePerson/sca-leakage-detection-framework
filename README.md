@@ -133,7 +133,7 @@ To get all the fixed traces from the file (this is based on the fixed flag that 
 
 
 ```python
-print('Fixed traces: \n%s' % t_test_data.get_fixed_traces())
+print('Fixed traces: \n%s' % t_test_data.get_every_fixed_trace())
 ```
 
     Fixed traces: 
@@ -151,7 +151,7 @@ To get all the random traces from the file (this is based on the fixed flag that
 
 
 ```python
-print('Random traces: \n%s' % t_test_data.get_random_traces())
+print('Random traces: \n%s' % t_test_data.get_every_random_trace())
 ```
 
     Random traces: 
@@ -269,8 +269,8 @@ When we call the function above, under the hood we are actually using another fu
 
 
 ```python
-time_samples = range(0, len(t_test_data.get_random_traces()[0]))
-t_test_data.convert_to_data_frame(data_x=time_samples, data_y=t_test_data.get_random_traces()[0], x="t Samples", y="Random Traces")
+time_samples = range(0, len(t_test_data.get_every_random_trace()[0]))
+t_test_data.convert_to_data_frame(data_x=time_samples, data_y=t_test_data.get_every_random_trace()[0], x="t Samples", y="Random Traces")
 ```
 
 

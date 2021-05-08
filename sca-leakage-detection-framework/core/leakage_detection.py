@@ -1,4 +1,3 @@
-import numpy as np
 from leak_calc import TVLA, CorrelationTest, TestType
 from core.plotter import Plotter
 
@@ -12,15 +11,20 @@ class LeakageDetectionFramework:
         if self.test_type == TestType.t_test:
             return TVLA()
         elif self.test_type == TestType.correlation_test:
-            CorrelationTest()
+            return CorrelationTest()
         else:
             return None
 
     def load_data(self, data_file):
         self.tester.data_loader.load_data(data_file)
 
-    def execute_test(self, t_stat_range=None, threshold=None):
-        return self.tester.execute_test(t_stat_range=t_stat_range, threshold=threshold)
+    def execute_test(self, t_stat_range=None, threshold=None, folds=None, byte_to_focus=None):
+        if self.test_type == TestType.t_test:
+            return self.tester.execute_test(t_stat_range=t_stat_range, threshold=threshold)
+        elif self.test_type == TestType.correlation_test:
+            return self.tester.execute_test(folds=folds, byte_to_focus=byte_to_focus)
+        else:
+            return None
 
     def trace_data(self):
         return self.tester.data_loader
