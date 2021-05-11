@@ -1,5 +1,5 @@
 from data import TVLAData, CorrelationTestData
-from leak_calc import MathUtil, TVLAResult
+from leak_calc import MathUtil, TVLAResult, CorrelationTestResult
 import numpy as np
 
 
@@ -62,30 +62,26 @@ class CorrelationTest(Tester):
     def execute_test(self, folds=None, byte_to_focus=None):
         self.folds = folds if folds else 10
         self.byte_to_focus = byte_to_focus if byte_to_focus else 0
-        self.allocate_memory()
-        self.initialise_sets()
-        # self.__set_shape("Profile", self.profile_set)
-        # self.__set_shape("Test", self.test_set)
-        # # print("Profile set 0 index: ", self.profile_set[0])
-        self.profile()
-        # self.__set_shape("Model", self.model)
-        result = self.correlation_test()
-        ind_t = np.array(range(len(result)))
-        ind_t = ind_t[result]
-        nr_of_leaky_points = len(ind_t)
-        return nr_of_leaky_points
+        self.__allocate_memory()
+        self.__initialise_sets()
+        self.__profile()
+        corr_result = self.correlation_test()
+        leaky_samples = np.array(range(len(corr_result)))
+        leaky_samples = leaky_samples[corr_result]
+        nr_of_leaky_points = len(leaky_samples)
+        return CorrelationTestResult(leaky_samples=leaky_samples, nr_of_leaky_points=nr_of_leaky_points)
 
-    def allocate_memory(self):
+    def __allocate_memory(self):
         self.test_set = [None] * (2 * self.folds)
         self.profile_set = [None] * (2 * self.folds)
 
-    def initialise_sets(self):
-        self.init_to_zero()
-        self.init_sets_with_trace_values()
+    def __initialise_sets(self):
+        self.__init_to_zero()
+        self.__init_sets_with_trace_values()
         # print("Test set: ", self.test_set)
         # print("Profile set: ", self.profile_set)
 
-    def init_to_zero(self):
+    def __init_to_zero(self):
         self.step = int(np.floor(self.data_loader.nr_of_traces / self.folds))
         for i in range(0, 2 * self.folds, 1):
             if np.mod(i, 2) == 0:
@@ -97,7 +93,7 @@ class CorrelationTest(Tester):
                 self.profile_set[i] = np.zeros(((self.folds - 1) * self.step, 16), dtype=np.int)
                 self.test_set[i] = np.zeros((self.step, 16), dtype=np.int)
 
-    def init_sets_with_trace_values(self):
+    def __init_sets_with_trace_values(self):
         t = 0
         for i in range(0, self.folds, 1):
             profile_set_ind = 0
@@ -116,22 +112,19 @@ class CorrelationTest(Tester):
                     self.test_set[t + 1] = self.data_loader.plain_text[trace_index, :]
             t = t + 2
 
-    def value_step(self, matrix, first, second):
+    def __value_step(self, matrix, first, second):
         return matrix[first * self.step : second * self.step, :]
 
-    def profile(self):
-        # Initialise the matrix with profiles:
+    def __profile(self):
         self.model = [None] * self.folds
 
         t = 0
         for j in range(0, self.folds, 1):
-            # Temporary Profile set (traces and plaintext)
             Lj = self.profile_set[t]
             Pj = self.profile_set[t + 1]
 
             to_be_put_in_model = np.zeros((self.step, self.data_loader.nr_of_samples))
 
-            # Compute the mean of j-th profile set:
             for i in range(0, self.step, 1):
                 to_be_put_in_model[i, :] = self.math_util.mean(Lj[Pj[:, self.byte_to_focus] == i, :])
 
@@ -140,18 +133,18 @@ class CorrelationTest(Tester):
             t = t + 2
 
     def correlation_test(self):
-        rhoj = np.zeros((self.folds, self.data_loader.nr_of_samples))
-        print("Rho shape: [%.0f][%.0f]" % (len(rhoj), len(rhoj[0])))
+        rho = np.zeros((self.folds, self.data_loader.nr_of_samples))
+        print("Rho shape: [%.0f][%.0f]" % (len(rho), len(rho[0])))
 
         number_of_traces_in_test_set = self.test_set[0].shape[0]
 
         for j in range(0, self.folds, 1):
             test_set = self.test_set[j * 2]
             model_set = self.model[j]
-            rhoj[j, :] = self.__corrcoef(test_set, model_set)
+            rho[j, :] = self.__corrcoef(test_set, model_set)
 
         print("Traces in test set: ", number_of_traces_in_test_set)
-        rho_total = self.math_util.mean(rhoj)
+        rho_total = self.math_util.mean(rho)
         rho_normalized = np.log((rho_total + 1) / (-rho_total + 1)) * np.sqrt(number_of_traces_in_test_set - 3) * 0.5
 
         print(rho_normalized)

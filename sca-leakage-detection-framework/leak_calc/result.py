@@ -19,4 +19,9 @@ class TVLAResult:
 
 
 class CorrelationTestResult:
-    pass
+    def __init__(self, leaky_samples, nr_of_leaky_points):
+        self.leaky_samples = leaky_samples
+        self.nr_of_leaky_points = nr_of_leaky_points
+
+    def __str__(self):
+        return "Leaky samples: " + str(self.leaky_samples) + "\nNr. of leaky points: " + str(self.nr_of_leaky_points)
