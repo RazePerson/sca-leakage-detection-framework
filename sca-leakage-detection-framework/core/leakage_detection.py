@@ -20,8 +20,8 @@ class LeakageDetectionFramework:
         else:
             return None
 
-    def load_data(self, data_file):
-        self.tester.data_loader.load_data(data_file)
+    def load_data(self, **data_file):
+        self.tester.data_loader.load_data(**data_file)
 
     def execute_test(self, t_stat_range=None, threshold=None, folds=None, byte_to_focus=None):
         if self.test_type == TestType.t_test:

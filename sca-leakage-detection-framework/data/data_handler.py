@@ -3,8 +3,11 @@ import numpy as np
 
 
 class TraceData:
-    def load_data(self, data_file):
+    def load_data(self, data_files):
         pass
+
+    def first_data_file(self, **data_files):
+        return list(data_files.items())[0][1]
 
 
 class TVLAData(TraceData):
@@ -22,8 +25,8 @@ class TVLAData(TraceData):
         else:
             TVLAData.__instance = self
 
-    def load_data(self, data_file):
-        data = np.load(data_file)
+    def load_data(self, **data_files):
+        data = np.load(self.first_data_file(**data_files))
         self.data = data
         self.extract_dataset_components()
 
@@ -84,21 +87,48 @@ class CorrelationTestData(TraceData):
         else:
             CorrelationTestData.__instance = self
 
-    def load_data(self, data_file):
-        data = np.load(data_file)
+    def load_data(self, **data_files):
+        data = np.load(self.first_data_file(**data_files))
         self.traces = (data["traces"]).astype(float)
         print("Trace shape: [%.0f][%.0f]" % (len(self.traces), (len(self.traces[0]))))
         self.nr_of_traces, self.nr_of_samples = self.traces.shape
         self.plain_text = data["pt"]
 
-    # def get_traces(self):
-    #     return self.traces
 
-    # def get_plain_text(self):
-    #     return self.plain_text
+class SNRTestData(TraceData):
+    __instance = None
 
-    # def get_nr_of_traces(self):
-    #     return self.nr_of_traces
+    @staticmethod
+    def get_instance():
+        if SNRTestData.__instance is None:
+            SNRTestData()
+        return SNRTestData.__instance
 
-    # def get_nr_of_samples(self):
-    #     return self.nr_of_samples
+    def __init__(self):
+        if SNRTestData.__instance is not None:
+            raise Exception("This class is a singleton")
+        else:
+            SNRTestData.__instance = self
+
+    def load_data(self, **data_files):
+        for key, value in data_files.items():
+            if key == "trace_data":
+                self.__load_trace_data(value)
+            elif key == "plaintext":
+                self.__load_plaintext(value)
+            else:
+                raise NameError('Wrong parameter name was given. Please use the names "trace_data" and "plaintext" for the data files.')
+
+    def __load_trace_data(self, trace_data):
+        self.traces = np.load(trace_data)
+        self.nr_of_traces = len(self.traces)
+        self.nr_of_samples = len(self.traces[0])
+
+    def __load_plaintext(self, plaintext):
+        self.plaintext = np.zeros(shape=(self.number_of_traces, 16))
+
+        with open(plaintext) as f:
+            content = f.readlines()
+
+        content = [x.strip() for x in content]
+        self.plaintext = np.array([bytearray.fromhex(c) for c in content])
