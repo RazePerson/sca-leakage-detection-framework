@@ -7,19 +7,31 @@ class Tester:
     def __init__(self):
         self.data_loader = None
 
-    def execute_test():
+    def execute_test(self, **params):
         pass
 
 
 class TVLA(Tester):
+    T_STAT_RANGE = "t_stat_range"
+    THRESHOLD = "threshold"
+
     def __init__(self):
         self.data_loader = TVLAData.get_instance()
 
-    def execute_test(self, t_stat_range=None, threshold=None):
+    def execute_test(self, **params):
         t_statistic = self.__welch_t_statistic(self.data_loader.get_every_fixed_trace(), self.data_loader.get_every_random_trace())
-        t_stat_range = t_stat_range if t_stat_range else range(0, len(t_statistic))
+        if self.T_STAT_RANGE in params:
+            t_stat_range = params.get(self.T_STAT_RANGE)
+        else:
+            t_stat_range = range(0, len(t_statistic))
+
         t_statistic = t_statistic[t_stat_range]
-        threshold = threshold if threshold else 4.5
+
+        if self.THRESHOLD in params:
+            threshold = params.get(self.THRESHOLD)
+        else:
+            threshold = 4.5
+
         leaky_indices = self.__leaky_indices(t_statistic, threshold)
 
         return TVLAResult(
@@ -55,13 +67,23 @@ class TVLA(Tester):
 
 
 class CorrelationTest(Tester):
+    FOLDS = "folds"
+    BYTE_TO_FOCUS = "byte_to_focus"
+
     def __init__(self):
         self.data_loader = CorrelationTestData.get_instance()
         self.math_util = MathUtil()
 
-    def execute_test(self, folds=None, byte_to_focus=None):
-        self.folds = folds if folds else 10
-        self.byte_to_focus = byte_to_focus if byte_to_focus else 0
+    def execute_test(self, **params):
+        if self.FOLDS in params:
+            self.folds = params.get(self.FOLDS)
+        else:
+            self.folds = 10
+
+        if self.BYTE_TO_FOCUS in params:
+            self.byte_to_focus = params.get(self.BYTE_TO_FOCUS)
+        else:
+            self.byte_to_focus = 0
         self.__allocate_memory()
         self.__initialise_sets()
         self.__profile()

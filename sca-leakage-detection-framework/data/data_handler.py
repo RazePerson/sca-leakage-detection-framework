@@ -111,13 +111,15 @@ class SNRTestData(TraceData):
             SNRTestData.__instance = self
 
     def load_data(self, **data_files):
-        for key, value in data_files.items():
-            if key == "trace_data":
-                self.__load_trace_data(value)
-            elif key == "plaintext":
-                self.__load_plaintext(value)
-            else:
-                raise NameError('Wrong parameter name was given. Please use the names "trace_data" and "plaintext" for the data files.')
+        if "trace_data" in data_files:
+            self.__load_trace_data(data_files.get("trace_data"))
+        else:
+            raise NameError('Wrong parameter name was given. Please use the names "trace_data" and "plaintext" for the data files.')
+
+        if "plaintext" in data_files:
+            self.__load_plaintext(data_files.get("plaintext"))
+        else:
+            raise NameError('Wrong parameter name was given. Please use the names "trace_data" and "plaintext" for the data files.')
 
     def __load_trace_data(self, trace_data):
         self.traces = np.load(trace_data)
