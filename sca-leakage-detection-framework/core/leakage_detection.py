@@ -1,4 +1,4 @@
-from leak_calc import TVLA, CorrelationTest, TestType
+from leak_calc import TVLA, CorrelationTest, SNRTest, TestType
 from core.plotter import Plotter
 
 
@@ -17,6 +17,8 @@ class LeakageDetectionFramework:
             return TVLA()
         elif self.test_type == TestType.correlation_test:
             return CorrelationTest()
+        elif self.test_type == TestType.snr_test:
+            return SNRTest()
         else:
             return None
 

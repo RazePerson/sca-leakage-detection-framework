@@ -96,6 +96,9 @@ class CorrelationTestData(TraceData):
 
 
 class SNRTestData(TraceData):
+    TRACE_DATA = "trace_data"
+    PLAINTEXT = "plaintext"
+
     __instance = None
 
     @staticmethod
@@ -111,15 +114,19 @@ class SNRTestData(TraceData):
             SNRTestData.__instance = self
 
     def load_data(self, **data_files):
-        if "trace_data" in data_files:
-            self.__load_trace_data(data_files.get("trace_data"))
+        if self.TRACE_DATA in data_files:
+            self.__load_trace_data(data_files.get(self.TRACE_DATA))
         else:
-            raise NameError('Wrong parameter name was given. Please use the names "trace_data" and "plaintext" for the data files.')
+            raise NameError(
+                'Wrong parameter name was given. Please use the names "%s" and "%s" for the data files.' % (self.TRACE_DATA, self.PLAINTEXT)
+            )
 
-        if "plaintext" in data_files:
-            self.__load_plaintext(data_files.get("plaintext"))
+        if self.PLAINTEXT in data_files:
+            self.__load_plaintext(data_files.get(self.PLAINTEXT))
         else:
-            raise NameError('Wrong parameter name was given. Please use the names "trace_data" and "plaintext" for the data files.')
+            raise NameError(
+                'Wrong parameter name was given. Please use the names "%s" and "%s" for the data files.' % (self.TRACE_DATA, self.PLAINTEXT)
+            )
 
     def __load_trace_data(self, trace_data):
         self.traces = np.load(trace_data)
@@ -127,7 +134,7 @@ class SNRTestData(TraceData):
         self.nr_of_samples = len(self.traces[0])
 
     def __load_plaintext(self, plaintext):
-        self.plaintext = np.zeros(shape=(self.number_of_traces, 16))
+        self.plaintext = np.zeros(shape=(self.nr_of_traces, 16))
 
         with open(plaintext) as f:
             content = f.readlines()

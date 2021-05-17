@@ -25,3 +25,11 @@ class CorrelationTestResult:
 
     def __str__(self):
         return "Leaky samples: " + str(self.leaky_samples) + "\nNr. of leaky points: " + str(self.nr_of_leaky_points)
+
+
+class SNRTestResult:
+    def __init__(self, result):
+        self.result = result
+
+    def __str__(self):
+        return "Result: " + str(self.result)
