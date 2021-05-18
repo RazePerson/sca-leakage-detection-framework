@@ -179,7 +179,7 @@ class CorrelationTest(Tester):
 
 
 class SNRTest(Tester):
-    TEST_TYPE = "test_type"
+    LEAKAGE_MODEL = "leakage_model"
     TARGET_BYTE_PARAM = "target_byte"
     CORRECT_BYTE_VALUE_PARAM = "correct_byte_value"
     LSB = "LSB"
@@ -193,22 +193,22 @@ class SNRTest(Tester):
         self.math_util = MathUtil()
 
     def execute_test(self, **params):
-        test_type = self._extract_param(self.TEST_TYPE, None, **params)
-        if test_type is None:
-            raise NameError('You must define the parameter "%s"!' % self.TEST_TYPE)
+        leakage_model = self._extract_param(self.LEAKAGE_MODEL, None, **params)
+        if leakage_model is None:
+            raise NameError('You must define the parameter "%s"!' % self.LEAKAGE_MODEL)
 
         self.target_byte = self._extract_param(self.TARGET_BYTE_PARAM, 0, **params)
         self.correct_byte_value = self._extract_param(self.CORRECT_BYTE_VALUE_PARAM, 0x00, **params)
 
-        if test_type == self.LSB:
+        if leakage_model == self.LSB:
             result = self.__execute_lsb()
-        elif test_type == self.LS2B:
+        elif leakage_model == self.LS2B:
             result = self.__execute_ls2b()
-        elif test_type == self.MSB:
+        elif leakage_model == self.MSB:
             result = self.__execute_msb()
-        elif test_type == self.HW:
+        elif leakage_model == self.HW:
             result = self.__execute_hw()
-        elif test_type == self.ID:
+        elif leakage_model == self.ID:
             result = self.__execute_id()
 
         return SNRTestResult(result)
@@ -238,7 +238,7 @@ class SNRTest(Tester):
             label_HW.append(self.__HW(self.SBOX[self.correct_byte_value ^ int(self.data_loader.plaintext[i][self.target_byte])]))
         return self.__return_snr_trace(self.data_loader.traces, label_HW)
 
-    def __HW(x):
+    def __HW(self, x):
         return sum([x & (1 << i) > 0 for i in range(32)])
 
     def __execute_id(self):

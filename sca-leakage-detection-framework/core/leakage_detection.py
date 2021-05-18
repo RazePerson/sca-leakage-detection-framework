@@ -1,5 +1,5 @@
 from leak_calc import TVLA, CorrelationTest, SNRTest, TestType
-from core.plotter import Plotter
+from core.plotter import SeabornPlotter
 
 
 class LeakageDetectionFramework:
@@ -12,7 +12,6 @@ class LeakageDetectionFramework:
             self.tester = self.__get_tester_based_on_type()
 
     def __get_tester_based_on_type(self):
-        print(self.test_type)
         if self.test_type == TestType.t_test:
             return TVLA()
         elif self.test_type == TestType.correlation_test:
@@ -32,4 +31,4 @@ class LeakageDetectionFramework:
         return self.tester.data_loader
 
     def plotter(self, style=None):
-        return Plotter(style)
+        return SeabornPlotter(style)
