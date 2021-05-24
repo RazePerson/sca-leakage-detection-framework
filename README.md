@@ -7,5 +7,6 @@ Installation[¶](#Installation)
 ------------------------------
 
 Jupyter Notebook[¶](#JupyterNotebook)
+-------------------------------------
 
-The full documentation of the framework can be found [here] (https://github.com/RazePerson/sca-leakage-detection-framework/blob/master/sca-leakage-detection-framework/main-app.ipynb)
+The full documentation of the framework can be found [here](https://github.com/RazePerson/sca-leakage-detection-framework/blob/master/sca-leakage-detection-framework/main-app.ipynb)
