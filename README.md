@@ -1,6 +1,6 @@
 # SCA Leakage Detection Framework[](#SCA-Leakage-Detection-Framework)
 
-This is a framework for TVLA. The goal of this framework is to make it easier for researchers, scientists, or any interested party to work with leakage detection techniques.
+The goal of this framework is to make it easier for researchers, scientists, or any interested party to work with leakage detection techniques.
 
 ## Installation[](#Installation)
 
