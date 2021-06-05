@@ -1,6 +1,6 @@
 # SCA Leakage Detection Framework[](#SCA-Leakage-Detection-Framework)
 
-This is a framework for TVLA. The goal of this framework is to make it easier for researchers, scientists, or anyone interested in using leakage detection techniques in SCA.
+This is a framework for TVLA. The goal of this framework is to make it easier for researchers, scientists, or any interested party to work with leakage detection techniques.
 
 ## Installation[](#Installation)
 
@@ -18,6 +18,30 @@ This is a framework for TVLA. The goal of this framework is to make it easier fo
         $ sudo apt update -y
         $ sudo apt install python3-pip -y
         ```
+- Anaconda (recommended)
+    - Follow the instructions for [installing Anaconda](https://docs.anaconda.com/anaconda/install/).
+
+
+    - Or follow this quick steps guide: 
+        1. Prerequisites:
+            ```shell
+            $ sudo apt-get install libgl1-mesa-glx libegl1-mesa libxrandr2 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2 libxi6 libxtst6
+            ```
+        2. Download Anaconda:
+            ```shell
+            $ wget https://repo.anaconda.com/archive/Anaconda3-2021.05-Linux-x86_64.sh
+            
+            # Optional verification of the hash
+            $ sha256sum Anaconda3-2021.05-Linux-x86_64.sh
+            ```
+        3. Install Anaconda:
+            ```shell
+            $ bash Anaconda3-2021.05-Linux-x86_64.sh
+            ```
+        4. Follow the installation prompt.
+        5. [Verify installation](https://docs.anaconda.com/anaconda/install/verify-install/).
+        
+        **Note**: if the quick guide above doesn't work, please refer to the official installation guide.
 
 - Clone the repository:
     ```shell
@@ -28,31 +52,7 @@ This is a framework for TVLA. The goal of this framework is to make it easier fo
 ### Packages
 Install following python packages
     
-#### **Using Anaconda (Recommended)**:
-    
-- Follow the instructions for [installing Anaconda](https://docs.anaconda.com/anaconda/install/).
-
-
-- Or follow this quick steps guide: 
-    1. Prerequisites:
-        ```shell
-        $ sudo apt-get install libgl1-mesa-glx libegl1-mesa libxrandr2 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2 libxi6 libxtst6
-        ```
-    2. Download Anaconda:
-        ```shell
-        $ wget https://repo.anaconda.com/archive/Anaconda3-2021.05-Linux-x86_64.sh
-        # Optional verification of hash
-        sha256sum Anaconda3-2021.05-Linux-x86_64.sh
-        ```
-    3. Install Anaconda:
-        ```shell
-        $ bash Anaconda3-2021.05-Linux-x86_64.sh
-        ```
-    4. Follow the installation prompt.
-    5. [Verify installation](https://docs.anaconda.com/anaconda/install/verify-install/).
-    
-    **Note**: if the quick guide above doesn't work, please refer to the official installation guide.
-
+#### **Using Anaconda (Recommended)**:    
 
 - Create conda environment:
     ```shell
