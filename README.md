@@ -50,7 +50,7 @@ This is a framework for TVLA. The goal of this framework is to make it easier fo
 
 
 ### Packages
-Install following python packages
+Install following python packages: numpy, pandas, tqdm, matplotlib, seaborn. 
     
 #### **Using Anaconda (Recommended)**:    
 
