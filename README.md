@@ -3,7 +3,7 @@
 This is a framework for TVLA. The goal of this framework is to make it easier for researchers, scientists, or anyone interested in using leakage detection techniques in SCA.
 
 ## Installation[¶](#Installation)
----
+
 ### Prerequisites
 
 - python3 version 3.8.5+
@@ -93,6 +93,5 @@ Install following python packages
 
 
 ## Framework Documentation Jupyter Notebook[¶](#Framework-Documentation-Jupyter-Notebook)
----
 
 The full documentation of the framework can be found [here](https://github.com/RazePerson/sca-leakage-detection-framework/blob/master/sca-leakage-detection-framework/main-app.ipynb).
