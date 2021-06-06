@@ -94,8 +94,6 @@ class CorrelationTest(Tester):
     def __initialise_sets(self):
         self.__init_to_zero()
         self.__init_sets_with_trace_values()
-        # print("Test set: ", self.test_set)
-        # print("Profile set: ", self.profile_set)
 
     def __init_to_zero(self):
         self.step = int(np.floor(self.data_loader.nr_of_traces / self.folds))
@@ -150,7 +148,6 @@ class CorrelationTest(Tester):
 
     def correlation_test(self):
         rho = np.zeros((self.folds, self.data_loader.nr_of_samples))
-        print("Rho shape: [%.0f][%.0f]" % (len(rho), len(rho[0])))
 
         number_of_traces_in_test_set = self.test_set[0].shape[0]
 
@@ -159,11 +156,8 @@ class CorrelationTest(Tester):
             model_set = self.model[j]
             rho[j, :] = self.__corrcoef(test_set, model_set)
 
-        print("Traces in test set: ", number_of_traces_in_test_set)
         rho_total = self.math_util.mean(rho)
         rho_normalized = np.log((rho_total + 1) / (-rho_total + 1)) * np.sqrt(number_of_traces_in_test_set - 3) * 0.5
-
-        print(rho_normalized)
 
         return np.abs(rho_normalized) > 4.5
 
@@ -173,9 +167,6 @@ class CorrelationTest(Tester):
         second_set_n = second_set - second_set.mean(axis=0)
         second_set_n = second_set_n / np.sqrt(np.sum(np.square(second_set_n), axis=0))
         return np.sum(np.multiply(first_set_n, second_set_n), axis=0)
-
-    def __set_shape(self, set_name, set):
-        print("%s set: [%.0f][%.0f][%.0f] " % (set_name, len(set), len(set[0]), len(set[0][0])))
 
 
 class SNRTest(Tester):

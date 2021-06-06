@@ -90,7 +90,6 @@ class CorrelationTestData(TraceData):
     def load_data(self, **data_files):
         data = np.load(self.first_data_file(**data_files))
         self.traces = (data["traces"]).astype(float)
-        print("Trace shape: [%.0f][%.0f]" % (len(self.traces), (len(self.traces[0]))))
         self.nr_of_traces, self.nr_of_samples = self.traces.shape
         self.plain_text = data["pt"]
 

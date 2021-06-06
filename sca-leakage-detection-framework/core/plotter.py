@@ -2,7 +2,6 @@ from decorators import translate_plot_data, translate_plot_data_dist
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
-from leak_calc import MathUtil
 
 
 class Plotter:
@@ -18,13 +17,6 @@ class Plotter:
         return self
 
     def highlight_points(self, points, marker=None, color=None):
-        # self.visualisation.highlight_points(points, marker=marker, color=color)
-        # return self
-        pass
-
-    def subplot(self, row, col):
-        # self.visualisation.subplot(row, col)
-        # return self
         pass
 
     def plot(self):
@@ -60,7 +52,6 @@ class DefaultPlotter:
         math_util = MathUtil()
         plt.figure(self.fignum)
         plt.clf()
-        # MT = np.mean(ldf.traces,axis=0)
         MT = math_util.mean(ldf.traces)
         plt.plot(MT)
         plt.xlim(0, ldf.nr_of_samples - 1)
@@ -78,7 +69,6 @@ class SeabornPlotter(Plotter):
 
     def __init__(self, style=None):
         self.active_plots = []
-        self.is_subplot = False
         self.ax_count = 0
         self.color = None
         style = style if style else "darkgrid"
@@ -96,27 +86,11 @@ class SeabornPlotter(Plotter):
     def create_plot(self, data):
         sns.displot(data=data)
 
-    # def create_line_plot(self, data):
-    #     g = sns.FacetGrid(data, size=5, aspect=2.5)
-    #     g.map(sns.relplot)
-
-    #     self.active_plots.append(g)
-
     @translate_plot_data
     def create_line_plot(self, data, **params):
         figsize = self._extract_param(self.FIG_SIZE, (7, 6), **params)
         x, y = data.columns.values
-        if self.is_subplot is True:
-            # self.active_plots.append(sns.relplot(x=x, y=y, data=data, kind="line"))
-            # fig = plt.gcf()
-            # fig.set_size_inches(7, 6)
-            self.__handle_plot(sns.relplot(x=x, y=y, data=data, kind="line", color=self.color), figsize)
-            self.ax_count += 1
-        else:
-            self.__handle_plot(sns.relplot(x=x, y=y, data=data, kind="line", color=self.color), figsize)
-            # self.active_plots.append(sns.relplot(x=x, y=y, data=data, kind="line"))
-            # fig = plt.gcf()
-            # fig.set_size_inches(7, 6)
+        self.__handle_plot(sns.relplot(x=x, y=y, data=data, kind="line", color=self.color), figsize)
 
     def __handle_plot(self, plot_func, figsize):
         self.active_plots.append(plot_func)
@@ -125,23 +99,9 @@ class SeabornPlotter(Plotter):
 
     @translate_plot_data_dist
     def create_hist_plot(self, data, **params):
-        # x, y = data.columns.values
         bins = np.arange(data.min(), data.max() + 1)
-        if self.is_subplot is True:
-            self.active_plots.append(sns.displot(data, bins=bins, kde=False))
-            self.ax_count += 1
-        else:
-            self.active_plots.append(sns.displot(data, bins=bins, kde=False))
+        self.active_plots.append(sns.displot(data, bins=bins, kde=False))
         return self
-
-    # def draw_horizontal_line(self, y_coord, color=None, ls=None):
-    #     color = color if color else "red"
-    #     ls = ls if ls else "--"
-    #     last_plot = len(self.active_plots) - 1
-    #     print(self.active_plots[last_plot])
-    #     print(self.active_plots[last_plot].axes[0])
-
-    #     self.active_plots[last_plot].axes[0][0].axhline(y_coord, color=color, ls=ls)
 
     def draw_horizontal_line(self, y_coord, color=None, ls=None):
         color = color if color else "black"
@@ -170,13 +130,5 @@ class SeabornPlotter(Plotter):
             plt.plot(x, y, marker=marker, color=color)
         return self
 
-    def subplot(self, row, col):
-        self.fig, self.axes = plt.subplots(row, col, figsize=(10 * row, 3 * col), sharex=True)
-        self.is_subplot = True
-        return self
-
     def plot(self):
-
-        # figsize = (30, 14)
-        # plt.figure(figsize=figsize)
         plt.show()

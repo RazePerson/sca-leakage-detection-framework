@@ -53,16 +53,3 @@ class App:
 
 app = App()
 app.test_leakage()
-# app.test_math()
-# app.test_math()
-# app.old_test()
-# snsp = SeabornPlotter()
-# print(app.ldf.traces[0, :])
-# math_util = MathUtil()
-# snsp.create_plot_line(math_util.mean(app.ldf.traces))
-
-# defp = DefaultPlotter()
-# defp.create_power_trace_plot(app.ldf)
-# snsp.plot()
-# snsp.create_plot(app.ldf.traces[0, :])
-# snsp.plot()
