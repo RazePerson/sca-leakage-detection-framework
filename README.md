@@ -97,7 +97,7 @@ If it is being cloned in a certain directory and it is being used in another dir
 ```python
 import sys
 
-sys.path.insert(1, '<path_to_project_root>/sca-leakage-detection-framework/')
+sys.path.insert(1, '<path_to_project_root>/')
 
 from core import LeakageDetectionFramework
 ```
