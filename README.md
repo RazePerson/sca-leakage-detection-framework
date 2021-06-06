@@ -90,8 +90,19 @@ Install following python packages: numpy, pandas, tqdm, matplotlib, seaborn.
     $ pip install -r <path_to_repo>/requirements.txt
     ```
 
+## Using the Framework[](#Using-The-Framework)
+To be used, the framework needs to be imported (details about additional usage in the notebook below). 
 
+If it is being cloned in a certain directory and it is being used in another directory, then the import should look like this:
+```python
+import sys
 
-## Framework Documentation Jupyter Notebook[](#Framework-Documentation-Jupyter-Notebook)
+sys.path.insert(1, '<path_to_project_root>/sca-leakage-detection-framework/')
 
-The full documentation of the framework can be found [here](https://github.com/RazePerson/sca-leakage-detection-framework/blob/master/sca-leakage-detection-framework/main-app.ipynb).
+from core import LeakageDetectionFramework
+```
+Where <path_to_project_root> represents the path to the root of the repository, e.g. */home/example/repos/sca-leakage-detection-framework/*.
+
+### Framework Documentation Jupyter Notebook[](#Framework-Documentation-Jupyter-Notebook)
+
+The full documentation of the framework can be found [here](https://github.com/RazePerson/sca-leakage-detection-framework/blob/master/main-app.ipynb).
