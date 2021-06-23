@@ -93,6 +93,12 @@ class CorrelationTestData(TraceData):
         self.nr_of_traces, self.nr_of_samples = self.traces.shape
         self.plain_text = data["pt"]
 
+    def get_all_traces(self):
+        return self.traces
+
+    def get_trace_sample(self, sample):
+        return self.traces[:, sample]
+
 
 class SNRTestData(TraceData):
     TRACE_DATA = "trace_data"
